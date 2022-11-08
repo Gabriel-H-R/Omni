@@ -1,0 +1,21 @@
+{
+  "_fv": 34,
+  "_type": "particle",
+  "definition": {
+    "texture": "yellow_smoke.png",
+    "animate": true,
+    "frameDuration": 2,
+    "width": 0.19999999999999998,
+    "height": 0.2,
+    "scale": 1.0,
+    "speedFactor": 0.2,
+    "gravity": 0.0,
+    "maxAge": 13,
+    "maxAgeDiff": 3,
+    "angularVelocity": 0.01,
+    "angularAcceleration": 0.0,
+    "canCollide": true,
+    "alwaysShow": true,
+    "renderType": "LIT"
+  }
+}

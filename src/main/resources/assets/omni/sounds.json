@@ -1,0 +1,29 @@
+{
+  "jade_dragon_death": {
+    "category": "hostile",
+    "sounds": [
+      {
+        "name": "omni:jade_dragon_death",
+        "stream": false
+      }
+    ]
+  },
+  "jade_dragon_idle": {
+    "category": "hostile",
+    "sounds": [
+      {
+        "name": "omni:jade_dragon_idle1",
+        "stream": false
+      }
+    ]
+  },
+  "jade_dragon_hurt": {
+    "category": "hostile",
+    "sounds": [
+      {
+        "name": "omni:jade_dragon_hurt",
+        "stream": false
+      }
+    ]
+  }
+}

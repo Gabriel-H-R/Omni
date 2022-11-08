@@ -1,0 +1,7 @@
+{
+  "parent": "omni:custom/dragon_charge_lvl_1_item",
+  "textures": {
+    "0": "omni:blocks/dragon_charge_lvl_1",
+    "particle": "omni:items/teleport_space_item"
+  }
+}
