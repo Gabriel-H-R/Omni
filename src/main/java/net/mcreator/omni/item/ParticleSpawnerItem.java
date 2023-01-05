@@ -16,9 +16,9 @@ public class ParticleSpawnerItem extends Item {
 
 	@Override
 	public InteractionResult useOn(UseOnContext context) {
-		InteractionResult retval = super.useOn(context);
+		super.useOn(context);
 		ParticleSpawnerRightclickedOnBlockProcedure.execute(context.getLevel(), context.getClickedPos().getX(), context.getClickedPos().getY(),
-				context.getClickedPos().getZ());
-		return retval;
+				context.getClickedPos().getZ(), context.getPlayer());
+		return InteractionResult.SUCCESS;
 	}
 }

@@ -1,10 +1,12 @@
 
 package net.mcreator.omni.entity;
 
+import software.bernie.geckolib3.util.GeckoLibUtil;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
 import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.controller.AnimationController;
+import software.bernie.geckolib3.core.builder.ILoopType.EDefaultLoopTypes;
 import software.bernie.geckolib3.core.builder.AnimationBuilder;
 import software.bernie.geckolib3.core.PlayState;
 import software.bernie.geckolib3.core.IAnimatable;
@@ -21,10 +23,12 @@ import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
 import net.minecraft.world.entity.ai.navigation.FlyingPathNavigation;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
+import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 import net.minecraft.world.entity.ai.goal.RandomStrollGoal;
 import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
 import net.minecraft.world.entity.ai.goal.MeleeAttackGoal;
 import net.minecraft.world.entity.ai.goal.Goal;
+import net.minecraft.world.entity.ai.goal.FloatGoal;
 import net.minecraft.world.entity.ai.control.FlyingMoveControl;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
@@ -32,24 +36,30 @@ import net.minecraft.world.entity.MobType;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.level.ServerBossEvent;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.chat.TextComponent;
 import net.minecraft.core.BlockPos;
 
-import net.mcreator.omni.procedures.JadeDragonMovementControllerProcedure;
-import net.mcreator.omni.procedures.JadeDragonEntityIsHurtProcedure;
+import net.mcreator.omni.procedures.JadeDragonHurt2Procedure;
 import net.mcreator.omni.init.OmniModEntities;
 
 import java.util.Random;
 import java.util.EnumSet;
 
 public class JadeDragonEntity extends Monster implements IAnimatable {
-	private AnimationFactory factory = new AnimationFactory(this);
+	public static final EntityDataAccessor<Boolean> SHOOT = SynchedEntityData.defineId(JadeDragonEntity.class, EntityDataSerializers.BOOLEAN);
+	private AnimationFactory factory = GeckoLibUtil.createFactory(this);
 	private boolean swinging;
+	private boolean lastloop;
 	private long lastSwing;
 	public String animationprocedure = "empty";
 	private final ServerBossEvent bossInfo = new ServerBossEvent(this.getDisplayName(), ServerBossEvent.BossBarColor.GREEN,
@@ -61,10 +71,18 @@ public class JadeDragonEntity extends Monster implements IAnimatable {
 
 	public JadeDragonEntity(EntityType<JadeDragonEntity> type, Level world) {
 		super(type, world);
-		xpReward = 30;
+		xpReward = 40;
 		setNoAi(false);
+		setCustomName(new TextComponent("Jade Dragon"));
+		setCustomNameVisible(true);
 		setPersistenceRequired();
 		this.moveControl = new FlyingMoveControl(this, 10, true);
+	}
+
+	@Override
+	protected void defineSynchedData() {
+		super.defineSynchedData();
+		this.entityData.define(SHOOT, false);
 	}
 
 	@Override
@@ -80,8 +98,7 @@ public class JadeDragonEntity extends Monster implements IAnimatable {
 	@Override
 	protected void registerGoals() {
 		super.registerGoals();
-		this.targetSelector.addGoal(1, new NearestAttackableTargetGoal(this, Player.class, false, false));
-		this.goalSelector.addGoal(2, new Goal() {
+		this.goalSelector.addGoal(1, new Goal() {
 			{
 				this.setFlags(EnumSet.of(Goal.Flag.MOVE));
 			}
@@ -104,7 +121,7 @@ public class JadeDragonEntity extends Monster implements IAnimatable {
 			public void start() {
 				LivingEntity livingentity = JadeDragonEntity.this.getTarget();
 				Vec3 vec3d = livingentity.getEyePosition(1);
-				JadeDragonEntity.this.moveControl.setWantedPosition(vec3d.x, vec3d.y, vec3d.z, 1);
+				JadeDragonEntity.this.moveControl.setWantedPosition(vec3d.x, vec3d.y, vec3d.z, 1.5);
 			}
 
 			@Override
@@ -114,14 +131,14 @@ public class JadeDragonEntity extends Monster implements IAnimatable {
 					JadeDragonEntity.this.doHurtTarget(livingentity);
 				} else {
 					double d0 = JadeDragonEntity.this.distanceToSqr(livingentity);
-					if (d0 < 20) {
+					if (d0 < 35) {
 						Vec3 vec3d = livingentity.getEyePosition(1);
-						JadeDragonEntity.this.moveControl.setWantedPosition(vec3d.x, vec3d.y, vec3d.z, 1);
+						JadeDragonEntity.this.moveControl.setWantedPosition(vec3d.x, vec3d.y, vec3d.z, 1.5);
 					}
 				}
 			}
 		});
-		this.goalSelector.addGoal(3, new RandomStrollGoal(this, 1, 20) {
+		this.goalSelector.addGoal(2, new RandomStrollGoal(this, 1, 20) {
 			@Override
 			protected Vec3 getPosition() {
 				Random random = JadeDragonEntity.this.getRandom();
@@ -131,13 +148,17 @@ public class JadeDragonEntity extends Monster implements IAnimatable {
 				return new Vec3(dir_x, dir_y, dir_z);
 			}
 		});
-		this.goalSelector.addGoal(4, new MeleeAttackGoal(this, 1, true) {
+		this.goalSelector.addGoal(3, new MeleeAttackGoal(this, 1.2, true) {
 			@Override
 			protected double getAttackReachSqr(LivingEntity entity) {
-				return (double) (4.0 + entity.getBbWidth() * entity.getBbWidth());
+				return this.mob.getBbWidth() * this.mob.getBbWidth() + entity.getBbWidth();
 			}
 		});
+		this.goalSelector.addGoal(4, new RandomStrollGoal(this, 1));
 		this.goalSelector.addGoal(5, new RandomLookAroundGoal(this));
+		this.targetSelector.addGoal(6, new NearestAttackableTargetGoal(this, Player.class, false, false));
+		this.targetSelector.addGoal(7, new HurtByTargetGoal(this));
+		this.goalSelector.addGoal(8, new FloatGoal(this));
 	}
 
 	@Override
@@ -172,18 +193,12 @@ public class JadeDragonEntity extends Monster implements IAnimatable {
 
 	@Override
 	public boolean hurt(DamageSource source, float amount) {
-		JadeDragonEntityIsHurtProcedure.execute(this.level, this, source.getEntity());
+		JadeDragonHurt2Procedure.execute(this.level, this, source.getEntity());
 		if (source == DamageSource.FALL)
 			return false;
-		if (source == DamageSource.ANVIL)
+		if (source == DamageSource.DRAGON_BREATH)
 			return false;
 		return super.hurt(source, amount);
-	}
-
-	@Override
-	public void baseTick() {
-		super.baseTick();
-		JadeDragonMovementControllerProcedure.execute(this);
 	}
 
 	@Override
@@ -228,70 +243,60 @@ public class JadeDragonEntity extends Monster implements IAnimatable {
 
 	public static AttributeSupplier.Builder createAttributes() {
 		AttributeSupplier.Builder builder = Mob.createMobAttributes();
-		builder = builder.add(Attributes.MOVEMENT_SPEED, 0.9);
-		builder = builder.add(Attributes.MAX_HEALTH, 1000);
+		builder = builder.add(Attributes.MOVEMENT_SPEED, 0.7);
+		builder = builder.add(Attributes.MAX_HEALTH, 300);
 		builder = builder.add(Attributes.ARMOR, 15);
 		builder = builder.add(Attributes.ATTACK_DAMAGE, 30);
-		builder = builder.add(Attributes.FOLLOW_RANGE, 64);
-		builder = builder.add(Attributes.KNOCKBACK_RESISTANCE, 0.9);
-		builder = builder.add(Attributes.ATTACK_KNOCKBACK, 3);
-		builder = builder.add(Attributes.FLYING_SPEED, 0.9);
+		builder = builder.add(Attributes.FOLLOW_RANGE, 35);
+		builder = builder.add(Attributes.ATTACK_KNOCKBACK, 2);
+		builder = builder.add(Attributes.FLYING_SPEED, 0.7);
 		return builder;
 	}
 
 	private <E extends IAnimatable> PlayState movementPredicate(AnimationEvent<E> event) {
-		if (this.animationprocedure == "empty") {
-			if (event.isMoving() || !(event.getLimbSwingAmount() > -0.15F && event.getLimbSwingAmount() < 0.15F)) {
-				event.getController().setAnimation(new AnimationBuilder().addAnimation("walk", true));
+		if (this.animationprocedure.equals("empty")) {
+			if ((event.isMoving() || !(event.getLimbSwingAmount() > -0.15F && event.getLimbSwingAmount() < 0.15F)) && this.isOnGround()) {
+				event.getController().setAnimation(new AnimationBuilder().addAnimation("walk", EDefaultLoopTypes.LOOP));
 				return PlayState.CONTINUE;
 			}
 			if (this.isDeadOrDying()) {
-				event.getController().setAnimation(new AnimationBuilder().addAnimation("death", false));
+				event.getController().setAnimation(new AnimationBuilder().addAnimation("death", EDefaultLoopTypes.PLAY_ONCE));
 				return PlayState.CONTINUE;
 			}
-			if (this.isInWaterOrBubble()) {
-				event.getController().setAnimation(new AnimationBuilder().addAnimation("swim", true));
+			if (!this.isOnGround()) {
+				event.getController().setAnimation(new AnimationBuilder().addAnimation("walk", EDefaultLoopTypes.LOOP));
 				return PlayState.CONTINUE;
 			}
-			if (this.isShiftKeyDown()) {
-				event.getController().setAnimation(new AnimationBuilder().addAnimation("sneak", true));
-				return PlayState.CONTINUE;
-			} else if (this.isSprinting()) {
-				event.getController().setAnimation(new AnimationBuilder().addAnimation("sprint", true));
-				return PlayState.CONTINUE;
-			}
-			event.getController().setAnimation(new AnimationBuilder().addAnimation("idle", true));
+			event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.model.idle", EDefaultLoopTypes.LOOP));
 			return PlayState.CONTINUE;
 		}
 		return PlayState.STOP;
 	}
 
-	private <E extends IAnimatable> PlayState attackingPredicate(AnimationEvent<E> event) {
-		double d1 = this.getX() - this.xOld;
-		double d0 = this.getZ() - this.zOld;
-		float velocity = (float) Math.sqrt(d1 * d1 + d0 * d0);
-		if (getAttackAnim(event.getPartialTick()) > 0f && !this.swinging) {
-			this.swinging = true;
-			this.lastSwing = level.getGameTime();
-		}
-		if (this.swinging && this.lastSwing + 15L <= level.getGameTime()) {
-			this.swinging = false;
-		}
-		if (this.swinging && event.getController().getAnimationState().equals(software.bernie.geckolib3.core.AnimationState.Stopped)) {
-			event.getController().markNeedsReload();
-			event.getController().setAnimation(new AnimationBuilder().addAnimation("attack"));
-			return PlayState.CONTINUE;
-		}
-		return PlayState.CONTINUE;
-	}
-
 	private <E extends IAnimatable> PlayState procedurePredicate(AnimationEvent<E> event) {
-		if (!(this.animationprocedure == "empty")
+		Entity entity = this;
+		Level world = entity.level;
+		boolean loop = false;
+		double x = entity.getX();
+		double y = entity.getY();
+		double z = entity.getZ();
+		if (!loop && this.lastloop) {
+			this.lastloop = false;
+			event.getController().setAnimation(new AnimationBuilder().addAnimation(this.animationprocedure, EDefaultLoopTypes.PLAY_ONCE));
+			event.getController().clearAnimationCache();
+			return PlayState.STOP;
+		}
+		if (!this.animationprocedure.equals("empty")
 				&& event.getController().getAnimationState().equals(software.bernie.geckolib3.core.AnimationState.Stopped)) {
-			event.getController().setAnimation(new AnimationBuilder().addAnimation(this.animationprocedure, false));
-			if (event.getController().getAnimationState().equals(software.bernie.geckolib3.core.AnimationState.Stopped)) {
-				this.animationprocedure = "empty";
-				event.getController().markNeedsReload();
+			if (!loop) {
+				event.getController().setAnimation(new AnimationBuilder().addAnimation(this.animationprocedure, EDefaultLoopTypes.PLAY_ONCE));
+				if (event.getController().getAnimationState().equals(software.bernie.geckolib3.core.AnimationState.Stopped)) {
+					this.animationprocedure = "empty";
+					event.getController().markNeedsReload();
+				}
+			} else {
+				event.getController().setAnimation(new AnimationBuilder().addAnimation(this.animationprocedure, EDefaultLoopTypes.LOOP));
+				this.lastloop = true;
 			}
 		}
 		return PlayState.CONTINUE;
@@ -300,15 +305,15 @@ public class JadeDragonEntity extends Monster implements IAnimatable {
 	@Override
 	protected void tickDeath() {
 		++this.deathTime;
-		if (this.deathTime == 20) {
+		if (this.deathTime == 50) {
 			this.remove(JadeDragonEntity.RemovalReason.KILLED);
+			this.dropExperience();
 		}
 	}
 
 	@Override
 	public void registerControllers(AnimationData data) {
 		data.addAnimationController(new AnimationController<>(this, "movement", 4, this::movementPredicate));
-		data.addAnimationController(new AnimationController<>(this, "attacking", 4, this::attackingPredicate));
 		data.addAnimationController(new AnimationController<>(this, "procedure", 4, this::procedurePredicate));
 	}
 

@@ -2,7 +2,7 @@
   "_fv": 38,
   "_type": "particle",
   "definition": {
-    "texture": "red_smoke.png",
+    "texture": "orange_smoke.png",
     "animate": true,
     "frameDuration": 2,
     "width": 0.19999999999999998,

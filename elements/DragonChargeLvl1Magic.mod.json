@@ -1,5 +1,5 @@
 {
-  "_fv": 34,
+  "_fv": 38,
   "_type": "rangeditem",
   "definition": {
     "renderType": 1,
@@ -15,26 +15,35 @@
       "value": ""
     },
     "shootConstantly": false,
-    "usageCount": 100,
+    "usageCount": 0,
     "actionSound": {
       "value": ""
     },
     "hasGlow": false,
-    "animation": "bow",
+    "animation": "none",
     "enableMeleeDamage": false,
     "damageVsEntity": 0.0,
-    "bulletPower": 1.0,
+    "bulletPower": 5.0,
     "bulletDamage": 30.0,
-    "bulletKnockback": 5,
-    "bulletParticles": true,
+    "bulletKnockback": 3,
+    "bulletParticles": false,
     "bulletIgnitesFire": false,
     "bulletItemTexture": {
-      "value": ""
+      "value": "CUSTOM:TeleportSpaceItem"
     },
-    "bulletModel": "Modelinvisible_power",
-    "customBulletModelTexture": "invisible_power.png",
+    "bulletModel": "Modeldragon_charge_lvl_1",
+    "customBulletModelTexture": "dragon_charge_lvl_1.png",
+    "onBulletHitsBlock": {
+      "name": "DragonChargeLvl1MagicHit"
+    },
+    "onBulletHitsPlayer": {
+      "name": "DragonChargeLvl1MagicHit"
+    },
+    "onBulletHitsEntity": {
+      "name": "DragonChargeLvl1MagicHit"
+    },
     "onBulletFlyingTick": {
-      "name": "DragonChargeLvl1MagicFlying"
+      "name": "ParticleSpawnerRightclickedOnBlock"
     }
   }
 }

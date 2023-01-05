@@ -48,25 +48,6 @@
       "registry_name": "space"
     },
     {
-      "name": "JadeDragon",
-      "type": "livingentity",
-      "sortid": 7,
-      "compiles": true,
-      "locked_code": false,
-      "registry_name": "jade_dragon"
-    },
-    {
-      "name": "JadeDragonModel",
-      "type": "procedure",
-      "sortid": 8,
-      "compiles": true,
-      "locked_code": false,
-      "registry_name": "jade_dragon_model",
-      "metadata": {
-        "dependencies": []
-      }
-    },
-    {
       "name": "JadeDragonEntityIsHurt",
       "type": "procedure",
       "sortid": 9,
@@ -91,75 +72,6 @@
       }
     },
     {
-      "name": "JadeDragonTargetPlayer",
-      "type": "procedure",
-      "sortid": 10,
-      "compiles": true,
-      "locked_code": false,
-      "registry_name": "jade_dragon_target_player",
-      "metadata": {
-        "return_type": "logic",
-        "dependencies": [
-          {
-            "name": "entity",
-            "type": "entity"
-          },
-          {
-            "name": "world",
-            "type": "world"
-          }
-        ]
-      }
-    },
-    {
-      "name": "JadeDragonMovementController",
-      "type": "procedure",
-      "sortid": 11,
-      "compiles": true,
-      "locked_code": false,
-      "registry_name": "jade_dragon_movement_controller",
-      "metadata": {
-        "dependencies": [
-          {
-            "name": "entity",
-            "type": "entity"
-          }
-        ]
-      }
-    },
-    {
-      "name": "DragonChargeFly",
-      "type": "procedure",
-      "sortid": 12,
-      "compiles": true,
-      "locked_code": false,
-      "registry_name": "dragon_charge_fly",
-      "metadata": {
-        "dependencies": [
-          {
-            "name": "immediatesourceentity",
-            "type": "entity"
-          },
-          {
-            "name": "x",
-            "type": "number"
-          },
-          {
-            "name": "y",
-            "type": "number"
-          },
-          {
-            "name": "z",
-            "type": "number"
-          },
-          {
-            "name": "world",
-            "type": "world"
-          }
-        ]
-      }
-    },
-    {
       "name": "ParticleSpawnerRightclickedOnBlock",
       "type": "procedure",
       "sortid": 14,
@@ -168,6 +80,10 @@
       "registry_name": "particle_spawner_rightclicked_on_block",
       "metadata": {
         "dependencies": [
+          {
+            "name": "entity",
+            "type": "entity"
+          },
           {
             "name": "x",
             "type": "number"
@@ -204,113 +120,6 @@
       "registry_name": "yellow_smoke"
     },
     {
-      "name": "DragonChargeLvl1",
-      "type": "livingentity",
-      "sortid": 16,
-      "compiles": true,
-      "locked_code": false,
-      "registry_name": "dragon_charge_lvl_1"
-    },
-    {
-      "name": "DragonChargeLvl1Model",
-      "type": "procedure",
-      "sortid": 17,
-      "compiles": true,
-      "locked_code": false,
-      "registry_name": "dragon_charge_lvl_1_model",
-      "metadata": {
-        "dependencies": []
-      }
-    },
-    {
-      "name": "DragonChargeLvl1Target",
-      "type": "procedure",
-      "sortid": 18,
-      "compiles": true,
-      "locked_code": false,
-      "registry_name": "dragon_charge_lvl_1_target",
-      "metadata": {
-        "dependencies": [
-          {
-            "name": "entity",
-            "type": "entity"
-          },
-          {
-            "name": "x",
-            "type": "number"
-          },
-          {
-            "name": "y",
-            "type": "number"
-          },
-          {
-            "name": "z",
-            "type": "number"
-          },
-          {
-            "name": "world",
-            "type": "world"
-          }
-        ]
-      }
-    },
-    {
-      "name": "DragonChargeLvl1FollowTarget",
-      "type": "procedure",
-      "sortid": 19,
-      "compiles": true,
-      "locked_code": false,
-      "registry_name": "dragon_charge_lvl_1_follow_target",
-      "metadata": {
-        "dependencies": [
-          {
-            "name": "entity",
-            "type": "entity"
-          },
-          {
-            "name": "x",
-            "type": "number"
-          },
-          {
-            "name": "y",
-            "type": "number"
-          },
-          {
-            "name": "z",
-            "type": "number"
-          }
-        ]
-      }
-    },
-    {
-      "name": "DragonChargeLvl1MagicFlying",
-      "type": "procedure",
-      "sortid": 20,
-      "compiles": true,
-      "locked_code": false,
-      "registry_name": "dragon_charge_lvl_1_magic_flying",
-      "metadata": {
-        "dependencies": [
-          {
-            "name": "x",
-            "type": "number"
-          },
-          {
-            "name": "y",
-            "type": "number"
-          },
-          {
-            "name": "z",
-            "type": "number"
-          },
-          {
-            "name": "world",
-            "type": "world"
-          }
-        ]
-      }
-    },
-    {
       "name": "DragonChargeLvl1Magic",
       "type": "rangeditem",
       "sortid": 20,
@@ -325,6 +134,74 @@
       "compiles": true,
       "locked_code": false,
       "registry_name": "red_smoke"
+    },
+    {
+      "name": "JadeDragon",
+      "type": "animatedentity",
+      "sortid": 22,
+      "compiles": true,
+      "locked_code": false,
+      "registry_name": "jade_dragon"
+    },
+    {
+      "name": "OrangeSmoke",
+      "type": "particle",
+      "sortid": 23,
+      "compiles": true,
+      "locked_code": false,
+      "registry_name": "orange_smoke"
+    },
+    {
+      "name": "DragonChargeLvl1MagicHit",
+      "type": "procedure",
+      "sortid": 24,
+      "compiles": true,
+      "locked_code": false,
+      "registry_name": "dragon_charge_lvl_1_magic_hit",
+      "metadata": {
+        "dependencies": [
+          {
+            "name": "x",
+            "type": "number"
+          },
+          {
+            "name": "y",
+            "type": "number"
+          },
+          {
+            "name": "z",
+            "type": "number"
+          },
+          {
+            "name": "world",
+            "type": "world"
+          }
+        ]
+      }
+    },
+    {
+      "name": "JadeDragonHurt2",
+      "type": "procedure",
+      "sortid": 25,
+      "compiles": true,
+      "locked_code": false,
+      "registry_name": "jade_dragon_hurt_2",
+      "metadata": {
+        "dependencies": [
+          {
+            "name": "entity",
+            "type": "entity"
+          },
+          {
+            "name": "sourceentity",
+            "type": "entity"
+          },
+          {
+            "name": "world",
+            "type": "world"
+          }
+        ]
+      }
     }
   ],
   "variable_elements": [],
@@ -357,31 +234,43 @@
   "language_map": {
     "en_us": {
       "item.omni.teleport_space_item": "Teleport Space Item",
-      "entity.omni.dragon_charge_lvl_1": "Dragon Charge Lvl 1",
       "item.omni.dragon_charge_lvl_1_magic": "Dragon Charge Lvl 1 Magic",
-      "subtitles.jade_dragon_idle": "",
-      "item.omni.universe": "Space Portal Igniter",
-      "subtitles.jade_dragon_hurt": "",
-      "item.omni.dragon_charge_lvl_1_spawn_egg": "Dragon Charge Lvl 1 Spawn Egg",
       "biome.omni.space": "Space",
       "item.omni.particle_spawner": "Particle Spawner",
+      "subtitles.jade_dragon_idle": "",
+      "item.omni.universe": "Space Portal Igniter",
       "entity.omni.jade_dragon": "Jade Dragon",
       "subtitles.jade_dragon_death": "",
       "item.omni.jade_dragon_spawn_egg": "Jade Dragon Spawn Egg",
+      "subtitles.jade_dragon_hurt": "",
       "subtitles.jade_dragons_sounds": ""
     }
   },
   "foldersRoot": {
     "name": "~",
-    "children": []
+    "children": [
+      {
+        "name": "Mobs",
+        "children": [
+          {
+            "name": "Jade Dragon",
+            "children": []
+          }
+        ]
+      },
+      {
+        "name": "Particles",
+        "children": []
+      }
+    ]
   },
   "workspaceSettings": {
     "modid": "omni",
     "modName": "Omni",
     "version": "1.0.0",
-    "author": "Gabriel, MCreator",
+    "author": "Gabriel",
     "websiteURL": "https://mcreator.net",
-    "license": "Academic Free License v3.0",
+    "license": "All Rights Reserved",
     "disableForgeVersionCheck": true,
     "serverSideOnly": false,
     "requiredMods": [],
@@ -395,5 +284,5 @@
     "modElementsPackage": "net.mcreator.omni",
     "lockBaseModFiles": false
   },
-  "mcreatorVersion": 202200344708
+  "mcreatorVersion": 202200452117
 }

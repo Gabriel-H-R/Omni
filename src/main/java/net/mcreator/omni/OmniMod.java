@@ -55,7 +55,6 @@ public class OmniMod {
 
 		OmniModBiomes.REGISTRY.register(bus);
 		OmniModParticleTypes.REGISTRY.register(bus);
-
 		GeckoLib.initialize();
 	}
 

@@ -9,19 +9,19 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.MultiBufferSource;
 
 import net.mcreator.omni.entity.DragonChargeLvl1MagicEntity;
-import net.mcreator.omni.client.model.Modelinvisible_power;
+import net.mcreator.omni.client.model.Modeldragon_charge_lvl_1;
 
 import com.mojang.math.Vector3f;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.blaze3d.vertex.PoseStack;
 
 public class DragonChargeLvl1MagicRenderer extends EntityRenderer<DragonChargeLvl1MagicEntity> {
-	private static final ResourceLocation texture = new ResourceLocation("omni:textures/entities/invisible_power.png");
-	private final Modelinvisible_power model;
+	private static final ResourceLocation texture = new ResourceLocation("omni:textures/entities/dragon_charge_lvl_1.png");
+	private final Modeldragon_charge_lvl_1 model;
 
 	public DragonChargeLvl1MagicRenderer(EntityRendererProvider.Context context) {
 		super(context);
-		model = new Modelinvisible_power(context.bakeLayer(Modelinvisible_power.LAYER_LOCATION));
+		model = new Modeldragon_charge_lvl_1(context.bakeLayer(Modeldragon_charge_lvl_1.LAYER_LOCATION));
 	}
 
 	@Override

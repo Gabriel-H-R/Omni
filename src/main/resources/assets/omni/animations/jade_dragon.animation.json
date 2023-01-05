@@ -2879,8 +2879,7 @@
 				"4.9583": {
 					"effect": "roar"
 				}
-			},
-			"particle_effects": {}
+			}
 		},
 		"head": {
 			"loop": true,

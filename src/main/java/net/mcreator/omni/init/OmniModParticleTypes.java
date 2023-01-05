@@ -17,4 +17,5 @@ public class OmniModParticleTypes {
 	public static final DeferredRegister<ParticleType<?>> REGISTRY = DeferredRegister.create(ForgeRegistries.PARTICLE_TYPES, OmniMod.MODID);
 	public static final RegistryObject<ParticleType<?>> YELLOW_SMOKE = REGISTRY.register("yellow_smoke", () -> new SimpleParticleType(true));
 	public static final RegistryObject<ParticleType<?>> RED_SMOKE = REGISTRY.register("red_smoke", () -> new SimpleParticleType(true));
+	public static final RegistryObject<ParticleType<?>> ORANGE_SMOKE = REGISTRY.register("orange_smoke", () -> new SimpleParticleType(true));
 }

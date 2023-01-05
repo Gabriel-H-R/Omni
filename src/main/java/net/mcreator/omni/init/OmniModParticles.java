@@ -14,6 +14,7 @@ import net.minecraft.client.Minecraft;
 
 import net.mcreator.omni.client.particle.YellowSmokeParticle;
 import net.mcreator.omni.client.particle.RedSmokeParticle;
+import net.mcreator.omni.client.particle.OrangeSmokeParticle;
 
 @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
 public class OmniModParticles {
@@ -21,5 +22,6 @@ public class OmniModParticles {
 	public static void registerParticles(ParticleFactoryRegisterEvent event) {
 		Minecraft.getInstance().particleEngine.register((SimpleParticleType) OmniModParticleTypes.YELLOW_SMOKE.get(), YellowSmokeParticle::provider);
 		Minecraft.getInstance().particleEngine.register((SimpleParticleType) OmniModParticleTypes.RED_SMOKE.get(), RedSmokeParticle::provider);
+		Minecraft.getInstance().particleEngine.register((SimpleParticleType) OmniModParticleTypes.ORANGE_SMOKE.get(), OrangeSmokeParticle::provider);
 	}
 }

@@ -18,7 +18,7 @@ import net.mcreator.omni.entity.DragonChargeLvl1MagicEntity;
 
 public class DragonChargeLvl1MagicItem extends Item {
 	public DragonChargeLvl1MagicItem() {
-		super(new Item.Properties().tab(CreativeModeTab.TAB_COMBAT).durability(100));
+		super(new Item.Properties().tab(CreativeModeTab.TAB_COMBAT).stacksTo(1));
 	}
 
 	@Override
@@ -29,7 +29,7 @@ public class DragonChargeLvl1MagicItem extends Item {
 
 	@Override
 	public UseAnim getUseAnimation(ItemStack itemstack) {
-		return UseAnim.BOW;
+		return UseAnim.NONE;
 	}
 
 	@Override
@@ -44,7 +44,7 @@ public class DragonChargeLvl1MagicItem extends Item {
 			double y = entity.getY();
 			double z = entity.getZ();
 			if (true) {
-				DragonChargeLvl1MagicEntity entityarrow = DragonChargeLvl1MagicEntity.shoot(world, entity, world.getRandom(), 1f, 30, 5);
+				DragonChargeLvl1MagicEntity entityarrow = DragonChargeLvl1MagicEntity.shoot(world, entity, world.getRandom(), 5f, 30, 3);
 				itemstack.hurtAndBreak(1, entity, e -> e.broadcastBreakEvent(entity.getUsedItemHand()));
 				entityarrow.pickup = AbstractArrow.Pickup.DISALLOWED;
 			}
